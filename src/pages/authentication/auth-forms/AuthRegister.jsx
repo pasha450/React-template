@@ -27,6 +27,7 @@ import { registerUser } from 'src/api/auth';   // register user from api compone
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import successHandler from 'api/successHandler';
+import errorHandler from 'api/errorHandler';
 
 // ============================|| JWT - REGISTER ||============================ //
 
@@ -54,9 +55,14 @@ export default function AuthRegister() {
     try {
       console.log(values)
       const response = await registerUser(values);
+      console.log("object 66rtt6")
+
       successHandler(response);
     } catch (error) {
-      console.log(error,"something went wrong")
+      console.log("object 666")
+      errorHandler(error.response)
+      return error;
+
     } 
   };
   return (
