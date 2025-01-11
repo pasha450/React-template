@@ -16,7 +16,7 @@ export const postRequest = async (endpoint, data) => {
     const response = await apiClient.post(endpoint, data);
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message; 
+    throw error.response?.data || error.message;
   }
 };
 

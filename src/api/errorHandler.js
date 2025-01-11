@@ -2,12 +2,13 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import {codeMessage} from "../utils/codeMessage"
 
-console.log("object 12345")
+
 export const validationErrors = (response) => {
+    console.log("validationErrors",response)
     if (response === undefined) return '';
-    
     if (response !== null && response.hasOwnProperty("errors")) {
         return response.errors; 
+
     } else if (response && response.status === false) {
         toast.error(response.error, {
             position: toast.POSITION.TOP_RIGHT,
@@ -28,10 +29,10 @@ export const validationErrors = (response) => {
         } else if (response.status !== 401 && response.status !== 422) {
             toast.error(codeMessage[response.status] || "An error occurred.", {
                 position: toast.POSITION.TOP_RIGHT,
-
             });
         }
     }
     return '';
 };
+
 export default validationErrors ;

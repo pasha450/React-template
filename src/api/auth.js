@@ -16,3 +16,16 @@ export const registerUser = async (userData) => {
   }
 };
 
+// for user login
+export const loginUser = async (credentials) => {
+  console.log(credentials, "login credentials");
+  const formData = new FormData();
+  formData.append('email', credentials.email);
+  formData.append('password', credentials.password);
+  try {
+    const response = await postRequest('/login', formData); 
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

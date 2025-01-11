@@ -21,6 +21,7 @@ import Typography from '@mui/material/Typography';
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { loginUser } from '/src/api/auth';
 
 // project import
 import AnimateButton from 'components/@extended/AnimateButton';
@@ -29,6 +30,9 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import FirebaseSocial from './FirebaseSocial';
+import successHandler from 'api/successHandler';
+import { values } from 'lodash';
+
 
 // ============================|| JWT - LOGIN ||============================ //
 
@@ -44,6 +48,18 @@ export default function AuthLogin({ isDemo = false }) {
     event.preventDefault();
   };
 
+  const handlelogin = async(values) =>{
+    try{
+        const response = await loginUser(values)
+        console.log('Login Successful:', response);
+        successHandler(response);
+    }catch(error){
+      console.log(error.reponse,'here show error')
+         return error;
+    }
+  }
+
+
   return (
     <>
       <Formik
@@ -56,6 +72,7 @@ export default function AuthLogin({ isDemo = false }) {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={handlelogin}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>

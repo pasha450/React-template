@@ -15,6 +15,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -27,7 +28,8 @@ import { registerUser } from 'src/api/auth';   // register user from api compone
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import successHandler from 'api/successHandler';
-import errorHandler from 'api/errorHandler';
+import {validationErrors} from 'api/errorHandler';
+
 
 // ============================|| JWT - REGISTER ||============================ //
 
@@ -53,16 +55,12 @@ export default function AuthRegister() {
   
   const formSubmit = async (values) => {
     try {
-      console.log(values)
       const response = await registerUser(values);
-      console.log("object 66rtt6")
-
       successHandler(response);
     } catch (error) {
-      console.log("object 666")
-      errorHandler(error.response)
+      validationErrors(error)
       return error;
-
+      
     } 
   };
   return (
@@ -74,7 +72,8 @@ export default function AuthRegister() {
           email: '',
           company: '',
           password: '',
-          submit: null
+          submit: null 
+
         }}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().max(255).required('First Name is required'),
