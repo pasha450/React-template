@@ -30,15 +30,19 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import FirebaseSocial from './FirebaseSocial';
-import successHandler from 'api/successHandler';
 import { values } from 'lodash';
+import { useNavigate } from "react-router-dom";
+import successHandler from 'api/successHandler';
+
+
+// import {validationErrors} from 'api/errorHandler';
 
 
 // ============================|| JWT - LOGIN ||============================ //
 
 export default function AuthLogin({ isDemo = false }) {
   const [checked, setChecked] = React.useState(false);
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -53,12 +57,14 @@ export default function AuthLogin({ isDemo = false }) {
         const response = await loginUser(values)
         console.log('Login Successful:', response);
         successHandler(response);
+        navigate("/")
     }catch(error){
       console.log(error.reponse,'here show error')
-         return error;
+      // validationErrors(error)
+        return error;
     }
   }
-
+    
 
   return (
     <>
