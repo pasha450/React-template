@@ -57,7 +57,7 @@ export default function AuthLogin({ isDemo = false }) {
         const response = await loginUser(values)
         console.log('Login Successful:', response);
         successHandler(response);
-        navigate("/")
+        // navigate("/")
     }catch(error){
       console.log(error.reponse,'here show error')
       // validationErrors(error)
