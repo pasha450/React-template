@@ -18,6 +18,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 
+
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -57,7 +58,7 @@ export default function AuthLogin({ isDemo = false }) {
         const response = await loginUser(values)
         console.log('Login Successful:', response);
         successHandler(response);
-        // navigate("/")
+        navigate("/") 
     }catch(error){
       console.log(error.reponse,'here show error')
       // validationErrors(error)
