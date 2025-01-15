@@ -27,6 +27,7 @@ const MainRoutes = {
     {
       path: 'color',
       element: <Color />
+      
     },
     {
       path: 'dashboard',

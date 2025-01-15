@@ -6,17 +6,18 @@ import "react-toastify/dist/ReactToastify.css";
 // project import
 import router from 'routes';
 import ThemeCustomization from 'themes';
-
 import ScrollTop from 'components/ScrollTop';
+import {UserProvider} from 'contexts/auth-reducer/userContext'
 
-// ==============================|| APP - THEME, ROUTER, LOCAL ||============================== //
 
 export default function App() {
   return (
     <ThemeCustomization>
       <ScrollTop>
+      <UserProvider>
         <RouterProvider router={router} />
         <ToastContainer />
+        </UserProvider>
       </ScrollTop>
     </ThemeCustomization>
   );

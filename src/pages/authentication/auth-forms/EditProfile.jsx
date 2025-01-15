@@ -15,6 +15,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import axios from 'axios';
+import { fetchUserProfile } from 'src/api/auth';
+
 
 // third party
 import * as Yup from 'yup';
@@ -22,18 +25,12 @@ import { Formik } from 'formik';
 
 // project import
 import AnimateButton from 'components/@extended/AnimateButton';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
-// assets
-import EyeOutlined from '@ant-design/icons/EyeOutlined';
-import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
-import { HouseRounded } from '@mui/icons-material';
 
 
-// ============================|| JWT - REGISTER ||============================ //
 
 export default function EditProfile({touched ,errors}){
         const [fileName, setFileName] = useState("No file chosen");
-      
+        
         const handleFileChange = (event) => {
           const file = event.target.files[0];
           if (file) {
@@ -42,7 +39,29 @@ export default function EditProfile({touched ,errors}){
             setFileName("No file chosen");
           }
         };
+       // Fetch user profile on component mount
+        useEffect(() => {
+        const getUserData = async () => {
+          try {
+            const userData = await fetchUserProfile();
+            console.log('fetched user data:',userData)
+            setInitialValues({
+              firstname: userData.firstname || '',
+              lastname: userData.lastname || '',
+              email: userData.email || '',
+            });
+          } catch (error) {
+            console.error('Error fetching user profile:', error);
+          }
+        };
 
+        getUserData();
+        }, []);
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    console.log('Form submitted with values:', values);
+    setSubmitting(false);
+  };
   return (
     <>
       <Formik
@@ -60,8 +79,8 @@ export default function EditProfile({touched ,errors}){
           lastname: Yup.string().max(255).required('Last Name is required'),
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           address:Yup.string().max(255).required('Address filed is required'),
-
         })}
+        onSubmit={handleSubmit}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
@@ -187,42 +206,6 @@ export default function EditProfile({touched ,errors}){
                         <Typography variant="body2">{fileName}</Typography>
                         </Stack>
                     </Box>
-   {/* local profile image  */}
-                    {/* <Grid item xs={12} md={6}>
-                    <Stack spacing={1}>
-                        <InputLabel htmlFor="file-upload">Upload File*</InputLabel>
-                        <OutlinedInput
-                        fullWidth 
-                        error={Boolean(touched.file && errors.file)}
-                        id="file-upload"
-                        type="file"
-                        name="file"
-                        onBlur={handleBlur}
-                        onChange={(event) => {
-                            const file = event.target.files[0];
-                            setFieldValue('file', file); 
-                        }}
-                        inputProps={{ accept: 'image/*' }} 
-            sx={{
-                '& input[type="file"]::file-selector-button': {
-                  backgroundColor: 'rgb(22 119 255 / 90%)',
-                  color: 'white', 
-                  borderRadius: '4px',
-                  padding: '4px 16px',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.3s',
-                },   
-              }}
-                    />
-                    </Stack>
-                    {touched.file && errors.file && (
-                        <FormHelperText error id="helper-text-file-upload">
-                        {errors.file}
-                        </FormHelperText>
-                    )}
-                    </Grid> */}
- 
-        {/* previous code */}
                     {touched.profileImage && errors.profileImage && (
                     <FormHelperText error id="helper-text-profile-image">
                         {errors.profileImage}
@@ -230,6 +213,7 @@ export default function EditProfile({touched ,errors}){
                     )}
                 </Stack>
              </Grid>
+
                 <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="contact-signup">Contact Number</InputLabel>
@@ -263,7 +247,7 @@ export default function EditProfile({touched ,errors}){
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Enter your address"
-                    rows={4} 
+                    rows={4}
                     style={{
                         width: '100%',
                         padding: '10px',
@@ -285,7 +269,12 @@ export default function EditProfile({touched ,errors}){
 
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button disableElevation 
+                  disabled={isSubmitting} 
+                  fullWidth size="large" 
+                  type="submit" 
+                  variant="contained"
+                  color="primary">
                   Edit Profile
                   </Button>
                 </AnimateButton>
