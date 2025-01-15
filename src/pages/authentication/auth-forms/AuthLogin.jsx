@@ -34,7 +34,7 @@ import FirebaseSocial from './FirebaseSocial';
 import { values } from 'lodash';
 import { useNavigate } from "react-router-dom";
 import successHandler from 'api/successHandler';
-
+import { useUser } from "../../../contexts/auth-reducer/userContext"; 
 
 // import {validationErrors} from 'api/errorHandler';
 
@@ -44,6 +44,9 @@ import successHandler from 'api/successHandler';
 export default function AuthLogin({ isDemo = false }) {
   const [checked, setChecked] = React.useState(false);
   const navigate = useNavigate();
+  const { login } = useUser(); // Access the context function
+
+  
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -58,6 +61,10 @@ export default function AuthLogin({ isDemo = false }) {
         const response = await loginUser(values)
         console.log('Login Successful:', response);
         successHandler(response);
+
+         // Save login data to context
+      login(response.userData);
+       
         navigate("/") 
     }catch(error){
       console.log(error.reponse,'here show error')
