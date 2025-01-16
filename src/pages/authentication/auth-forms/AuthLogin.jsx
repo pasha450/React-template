@@ -34,7 +34,8 @@ import FirebaseSocial from './FirebaseSocial';
 import { values } from 'lodash';
 import { useNavigate } from "react-router-dom";
 import successHandler from 'api/successHandler';
-import { useUser } from "../../../contexts/auth-reducer/userContext"; 
+import { useUser } from "src/contexts/userContext"; 
+import { Formik ,ErrorMessage} from 'formik';    // add the  errorMessage 
 
 // import {validationErrors} from 'api/errorHandler';
 
@@ -63,13 +64,14 @@ export default function AuthLogin({ isDemo = false }) {
         successHandler(response);
 
          // Save login data to context
-      login(response.userData);
-       
-        navigate("/") 
+      login(response.user);
+
+        navigate("/")
     }catch(error){
       console.log(error.reponse,'here show error')
-      // validationErrors(error)
+      validationErrors(error)
         return error;
+      
     }
   }
     

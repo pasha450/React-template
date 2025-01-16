@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
+import { useUser } from "src/contexts/auth-reducer/userContext"; 
 import { fetchUserProfile } from 'src/api/auth';
 
 
@@ -29,8 +30,9 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 
 export default function EditProfile({touched ,errors}){
+      const { user } = useUser();
         const [fileName, setFileName] = useState("No file chosen");
-        
+        console.log(user,"user")
         const handleFileChange = (event) => {
           const file = event.target.files[0];
           if (file) {
