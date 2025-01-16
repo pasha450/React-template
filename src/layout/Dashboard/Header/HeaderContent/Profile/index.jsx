@@ -29,6 +29,8 @@ import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import SettingOutlined from '@ant-design/icons/SettingOutlined';
 import UserOutlined from '@ant-design/icons/UserOutlined';
 import avatar1 from 'assets/images/users/avatar-1.png';
+import { useUser } from "src/contexts/auth-reducer/userContext"; 
+import useLogout from './logout';
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -50,7 +52,8 @@ function a11yProps(index) {
 
 export default function Profile() {
   const theme = useTheme();
-
+  const { user } = useUser();
+  const handleLogout = useLogout();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const handleToggle = () => {
@@ -71,7 +74,7 @@ export default function Profile() {
   };
 
   const iconBackColorOpen = 'grey.100';
-
+ console.log(user,"user")
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
       <ButtonBase
@@ -91,7 +94,8 @@ export default function Profile() {
         <Stack direction="row" spacing={1.25} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-            John Doe
+            {user?.firstname} {user?.lastname}
+            {/* John Doe */}
           </Typography>
         </Stack>
       </ButtonBase>
@@ -124,7 +128,10 @@ export default function Profile() {
                         <Stack direction="row" spacing={1.25} alignItems="center">
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                           <Stack>
-                            <Typography variant="h6">John Doe</Typography>
+                            <Typography variant="h6">
+                              {/* John Doe */}
+                              {user?.firstname} {user?.lastname}
+                              </Typography>
                             <Typography variant="body2" color="text.secondary">
                               UI/UX Designer
                             </Typography>
@@ -133,7 +140,9 @@ export default function Profile() {
                       </Grid>
                       <Grid item>
                         <Tooltip title="Logout">
-                          <IconButton size="large" sx={{ color: 'text.primary' }}>
+                          <IconButton size="large" sx={{ color: 'text.primary' }}
+                          onClick={handleLogout}
+                          >
                             <LogoutOutlined />
                           </IconButton>
                         </Tooltip>
