@@ -44,17 +44,16 @@ export default function AuthLogin({ isDemo = false }) {
   const [checked, setChecked] = React.useState(false);
   const navigate = useNavigate();
   const { login } = useUser(); // Access the context function
-
-  
+ 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
   
-  const handleMouseDownPassword = (event) => {
+  const handleMouseDownPassword = (event) => {  
     event.preventDefault();
   };
-
+  
   const handlelogin = async(values,{setFieldError}) =>{
     try{
         const response = await loginUser(values)

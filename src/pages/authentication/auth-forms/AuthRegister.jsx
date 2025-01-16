@@ -25,6 +25,8 @@ import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import successHandler from 'api/successHandler';
 import { validationErrors } from 'api/errorHandler';
 import { Grid, Stack, InputLabel, OutlinedInput, FormHelperText, Button } from '@mui/material';
+import { useNavigate } from "react-router-dom";
+// ============================|| JWT - REGISTER ||============================ //
 
 export default function AuthRegister() {
   const [level, setLevel] = useState();
