@@ -58,6 +58,8 @@ export default function AuthRegister() {
       setSubmitting(false);
       validationErrors(error,setFieldError,setServerErrors);
     }
+
+    
   };
 
   return (
