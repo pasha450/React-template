@@ -60,6 +60,9 @@ export default function AuthRegister() {
     }
   };
 
+
+
+  
   return (
     <Formik
       initialValues={{
