@@ -9,7 +9,10 @@ export const validationErrors = (error, setFieldError, setServerErrors) => {
         });
        setServerErrors(error.errors);  // update the state for server errors 
        console.log(error.errors,"server errors ")
-    }else {
+    }
+    else {
     toast.error("An unexpected error occurred. Please try again.");
   }
 };
+
+

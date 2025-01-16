@@ -21,7 +21,6 @@ import Typography from '@mui/material/Typography';
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
 import { loginUser } from '/src/api/auth';
 
 // project import
@@ -34,10 +33,9 @@ import FirebaseSocial from './FirebaseSocial';
 import { values } from 'lodash';
 import { useNavigate } from "react-router-dom";
 import successHandler from 'api/successHandler';
-import { useUser } from "src/contexts/userContext"; 
+import { useUser } from "../../../contexts/auth-reducer/userContext"; 
 import { Formik ,ErrorMessage} from 'formik';    // add the  errorMessage 
-
-// import {validationErrors} from 'api/errorHandler';
+import { validationErrors } from 'api/errorHandler';
 
 
 // ============================|| JWT - LOGIN ||============================ //
@@ -57,7 +55,7 @@ export default function AuthLogin({ isDemo = false }) {
     event.preventDefault();
   };
 
-  const handlelogin = async(values) =>{
+  const handlelogin = async(values,{setFieldError}) =>{
     try{
         const response = await loginUser(values)
         console.log('Login Successful:', response);
@@ -65,13 +63,10 @@ export default function AuthLogin({ isDemo = false }) {
 
          // Save login data to context
       login(response.user);
-
         navigate("/")
     }catch(error){
-      console.log(error.reponse,'here show error')
-      validationErrors(error)
-        return error;
-      
+      console.log(error,'show error message')
+      validationErrors(error,setFieldError) 
     }
   }
     
@@ -142,6 +137,7 @@ export default function AuthLogin({ isDemo = false }) {
                     placeholder="Enter password"
                   />
                 </Stack>
+                <ErrorMessage name="password" component="div" className="error" />
                 {touched.password && errors.password && (
                   <FormHelperText error id="standard-weight-helper-text-password-login">
                     {errors.password}
