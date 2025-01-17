@@ -3,6 +3,9 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MinimalLayout from 'layout/MinimalLayout';
+import MainRoutes from './MainRoutes';
+import ProtectedRoute from './ProtectedRoute';
+
 
 // render - login
 const AuthLogin = Loadable(lazy(() => import('pages/authentication/login')));
@@ -15,14 +18,24 @@ const LoginRoutes = {
   element: <MinimalLayout />,
   children: [
     {
-      path: '/login',
+      path: '/',
       element: <AuthLogin />
     },
     {
+      path: '/login',
+      element: 
+     <ProtectedRoute>
+       <AuthLogin />
+     </ProtectedRoute>
+    },
+    {
       path: '/register',
-      element: <AuthRegister />
+      element: 
+      <ProtectedRoute>
+        <AuthRegister />
+      </ProtectedRoute>
     }
   ]
 };
-
+// const routes =[MainRoutes,LoginRoutes]
 export default LoginRoutes;

@@ -31,9 +31,8 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 export default function EditProfile({touched ,errors}){
       const { user } = useUser();
-        const [fileName, setFileName] = useState("No file chosen");
-        console.log(user,"user")
-        const handleFileChange = (event) => {
+      const [fileName, setFileName] = useState("No file chosen");
+      const handleFileChange = (event) => {
           const file = event.target.files[0];
           if (file) {
             setFileName(file.name);
@@ -41,24 +40,29 @@ export default function EditProfile({touched ,errors}){
             setFileName("No file chosen");
           }
         };
-       // Fetch user profile on component mount
-        useEffect(() => {
+
+       // Fetch user profile data
+      useEffect(() => {
         const getUserData = async () => {
           try {
-            const userData = await fetchUserProfile();
-            console.log('fetched user data:',userData)
-            setInitialValues({
-              firstname: userData.firstname || '',
-              lastname: userData.lastname || '',
-              email: userData.email || '',
-            });
+            if (user?._id) { 
+              const userData = await fetchUserProfile(user._id);
+              console.log('Fetched user data:', userData);
+              setInitialValues({
+                firstname: userData.firstname || '',
+                lastname: userData.lastname || '',
+                email: userData.email || '',
+                
+              });
+            }
           } catch (error) {
             console.error('Error fetching user profile:', error);
           }
         };
-
+      
         getUserData();
-        }, []);
+      }, [user]);
+      
 
   const handleSubmit = async (values, { setSubmitting }) => {
     console.log('Form submitted with values:', values);

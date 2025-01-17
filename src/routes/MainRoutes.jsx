@@ -21,22 +21,13 @@ const MainRoutes = {
   element: <Dashboard />,
   children: [
     {
-      path: '/',
-      element: <DashboardDefault />
-    },
-    {
       path: 'color',
       element: <Color />
       
     },
     {
       path: 'dashboard',
-      children: [
-        {
-          path: 'default',
-          element: <DashboardDefault />
-        }
-      ]
+      element: <DashboardDefault />
     },
     {
       path: 'sample-page',

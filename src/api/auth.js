@@ -31,16 +31,27 @@ export const loginUser = async (credentials) => {
   }
 };
 
-// for edit profile 
-export const fetchUserProfile = async () => {
+export const fetchUserProfile = async (userId) => {
   try {
-    const response = await postRequest('/edit-profile');
-    return response; 
+    const response = await postRequest('/edit-profile', { id: userId });
+    if (response && response.data) {   
+      console.log(response ,'responsedata 122222')
+      return response.data;
+    } else {
+      throw new Error('Invalid response structure');
+    }
   } catch (error) {
     console.error('Error fetching user profile:', error);
     throw error;
   }
 };
+
+
+
+
+
+
+
 
 
 

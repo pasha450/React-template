@@ -25,10 +25,10 @@ const useLogout = () => {
       Cookies.remove('authToken');
       localStorage.removeItem('savedEmail');
       localStorage.removeItem('savedPassword');
-
+       
       // Show success message
       await Swal.fire('Logged out!', 'You have been logged out successfully.', 'success');
-      
+
       // Redirect to the login page
       navigate('/login');
     }

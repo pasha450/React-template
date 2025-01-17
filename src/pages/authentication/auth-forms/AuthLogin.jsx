@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useEffect } from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -43,8 +44,8 @@ import { validationErrors } from 'api/errorHandler';
 export default function AuthLogin({ isDemo = false }) {
   const [checked, setChecked] = React.useState(false);
   const navigate = useNavigate();
-  const { login } = useUser(); // Access the context function
- 
+  const { login } = useUser(); 
+
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -62,7 +63,7 @@ export default function AuthLogin({ isDemo = false }) {
 
          // Save login data to context
       login(response.user);
-        navigate("/")
+        navigate("/dashboard")
     }catch(error){
       console.log(error,'show error message')
       validationErrors(error,setFieldError) 
