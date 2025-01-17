@@ -11,9 +11,16 @@ const apiClient = axios.create({
 });
 
 // Helper function for POST requests
-export const postRequest = async (endpoint, data) => {
+export const postRequest = async (endpoint, data, token = null) => {
   try {
-    const response = await apiClient.post(endpoint, data);
+    const headers={};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      headers['Content-Type'] = 'multipart/form-data';
+    }
+
+    console.log(headers,'headers')
+    const response = await apiClient.post(endpoint, data , {headers});
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;

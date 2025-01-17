@@ -62,7 +62,8 @@ export default function AuthLogin({ isDemo = false }) {
         successHandler(response);
 
          // Save login data to context
-      login(response.user);
+        login(response.user);
+        
         navigate("/dashboard")
     }catch(error){
       console.log(error,'show error message')

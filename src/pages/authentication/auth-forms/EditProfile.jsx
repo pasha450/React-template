@@ -32,6 +32,16 @@ import AnimateButton from 'components/@extended/AnimateButton';
 export default function EditProfile({touched ,errors}){
       const { user } = useUser();
       const [fileName, setFileName] = useState("No file chosen");
+   
+      const [formData, setFormData] = useState({
+        firstname: '',
+        lastname: '',
+        email: '',
+        company: '',
+        address: '',
+        profile_image: '',
+      });
+
       const handleFileChange = (event) => {
           const file = event.target.files[0];
           if (file) {
@@ -45,21 +55,19 @@ export default function EditProfile({touched ,errors}){
       useEffect(() => {
         const getUserData = async () => {
           try {
-            if (user?._id) { 
-              const userData = await fetchUserProfile(user._id);
-              console.log('Fetched user data:', userData);
+            if (user?._id && user?.token) {  // both userId and token exist
+              const userData = await fetchUserProfile(user._id , user.token);
+              console.log(userData,"fetched here user data  ")
               setInitialValues({
                 firstname: userData.firstname || '',
                 lastname: userData.lastname || '',
                 email: userData.email || '',
-                
               });
             }
           } catch (error) {
             console.error('Error fetching user profile:', error);
           }
         };
-      
         getUserData();
       }, [user]);
       
@@ -71,15 +79,7 @@ export default function EditProfile({touched ,errors}){
   return (
     <>
       <Formik
-        initialValues={{
-          firstname: '',
-          lastname: '',
-          email: '',
-          company: '',
-          address:'',
-          profileImage:'',
-          submit: null 
-        }}
+        initialValues={formData} // Set initial values from state
         validationSchema={Yup.object().shape({
           firstname: Yup.string().max(255).required('First Name is required'),
           lastname: Yup.string().max(255).required('Last Name is required'),

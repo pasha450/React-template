@@ -1,6 +1,6 @@
 
 import { postRequest } from './fetcher';
-
+import { useUser } from "src/contexts/auth-reducer/userContext"; 
 
 export const registerUser = async (userData) => {
   console.log(userData,"userData")
@@ -31,16 +31,11 @@ export const loginUser = async (credentials) => {
   }
 };
 
-export const fetchUserProfile = async (userId) => {
+export const fetchUserProfile = async (userId , token ) => {
   try {
-    let headers = {
-      Accept: "application/json",
-      Authorization: "Bearer " + getTokenData().access_token,
-     
-    };
-    const response = await postRequest('/edit-profile', { id: userId },{ headers: headers});
+    // const { user } = useUser();
+    const response = await postRequest('/edit-profile', { id: userId} , token);
     if (response && response.data) {   
-      console.log(response ,'responsedata 122222')
       return response.data;
     } else {
       throw new Error('Invalid response structure');
