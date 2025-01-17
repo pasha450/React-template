@@ -33,7 +33,12 @@ export const loginUser = async (credentials) => {
 
 export const fetchUserProfile = async (userId) => {
   try {
-    const response = await postRequest('/edit-profile', { id: userId });
+    let headers = {
+      Accept: "application/json",
+      Authorization: "Bearer " + getTokenData().access_token,
+     
+    };
+    const response = await postRequest('/edit-profile', { id: userId },{ headers: headers});
     if (response && response.data) {   
       console.log(response ,'responsedata 122222')
       return response.data;
@@ -45,7 +50,6 @@ export const fetchUserProfile = async (userId) => {
     throw error;
   }
 };
-
 
 
 

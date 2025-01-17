@@ -6,6 +6,7 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import ListItem from '@mui/material/ListItem';
 
 // assets
 import EditOutlined from '@ant-design/icons/EditOutlined';
@@ -14,12 +15,17 @@ import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import UserOutlined from '@ant-design/icons/UserOutlined';
 import WalletOutlined from '@ant-design/icons/WalletOutlined';
 import { useNavigate } from 'react-router-dom'; 
+import useLogout from "./logout";
+import { useUser } from "../../../../../contexts/auth-reducer/userContext"; 
 
 // ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
 
 export default function ProfileTab() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const navigate = useNavigate();
+  const { user } = useUser();
+  const handleLogout = useLogout();
+
 
   const handleListItemClick = (index, route) => {
     setSelectedIndex(index);
@@ -57,10 +63,12 @@ export default function ProfileTab() {
         <ListItemText primary="Billing" />
       </ListItemButton>
       <ListItemButton selected={selectedIndex === 2}>
-        <ListItemIcon>
-          <LogoutOutlined />
-        </ListItemIcon>
-        <ListItemText primary="Logout" />
+      <ListItem onClick={handleLogout}>
+      <ListItemIcon>
+        <LogoutOutlined />
+      </ListItemIcon>
+      <ListItemText primary="Logout" />
+    </ListItem>
       </ListItemButton>
     </List>
   );
