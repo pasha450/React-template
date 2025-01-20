@@ -27,6 +27,8 @@ import { Formik } from 'formik';
 
 // project import
 import AnimateButton from 'components/@extended/AnimateButton';
+import { validationErrors } from 'api/errorHandler';
+import successHandler from 'api/successHandler';
 
 
 
@@ -56,7 +58,7 @@ export default function EditProfile({touched ,errors}){
        useEffect(() => {
         const getUserData = async () => {
           try {
-            if (user?._id && user?.token) {     // Ensure both userId and token exist
+            if (user?._id && user?.token) {   
               const userData = await fetchUserProfile(user._id, user.token);
               setFormData({
                 firstname: userData.firstname || '',
@@ -78,11 +80,11 @@ export default function EditProfile({touched ,errors}){
     console.log('Form submitted with values:', values);
     setSubmitting(true);
     try {
-      const updatedData = { ...values, profile_image: formData.profile_image }; 
-      const response = await updateUserProfile(updatedData);
+      if (user?._id && user?.token) { 
+      const updatedData = { ...values, profile_image: formData.profile_image}; 
+      const response = await updateUserProfile(updatedData, user._id, user.token);
       console.log('Profile updated successfully:', response);
-
-      // Update the form data with the response
+      successHandler(response)
       setFormData({
         firstname: response.firstname,
         lastname: response.lastname,
@@ -91,15 +93,29 @@ export default function EditProfile({touched ,errors}){
         address: response.address,
         profile_image: response.profile_image,
       });
+      
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
+      validationErrors(error)
     } 
   };
   return (
     <>
       <Formik
-        key={JSON.stringify(formData)} // Add a key to force reinitialization
-        initialValues={formData}  
+        // key={JSON.stringify(formData)} // Add a key to force reinitialization
+        enableReinitialize
+        initialValues={formData} 
+        
+        // initialValues={{
+        //   firstname: formData.firstname , 
+        //   lastname: formData.lastname ,
+        //   email: formData.email ,
+        //   company: formData.company ,
+        //   address: formData.address ,
+        //   profile_image: formData.profile_image ,
+        // }}
+        
         validationSchema={Yup.object().shape({
           firstname: Yup.string().max(255).required('First Name is required'),
           lastname: Yup.string().max(255).required('Last Name is required'),
@@ -121,7 +137,7 @@ export default function EditProfile({touched ,errors}){
                     name="firstname"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter your first Name"
+                    placeholder="Enter your first Name" 
                     fullWidth
                     error={Boolean(touched.firstname && errors.firstname)}
                   />
@@ -146,7 +162,6 @@ export default function EditProfile({touched ,errors}){
                     onChange={handleChange}
                     placeholder="Enter your Last Name "
                     inputProps={{}}
-
                   />
                 </Stack>
                 {touched.lastname && errors.lastname && (

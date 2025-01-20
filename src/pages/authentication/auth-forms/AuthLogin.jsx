@@ -58,7 +58,7 @@ export default function AuthLogin({ isDemo = false }) {
   const handlelogin = async(values,{setFieldError}) =>{
     try{
         const response = await loginUser(values)
-        console.log('Login Successful:', response);
+        // console.log('Login Successful:', response);
         successHandler(response);
 
          // Save login data to context

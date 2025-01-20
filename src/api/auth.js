@@ -46,8 +46,8 @@ export const fetchUserProfile = async (userId , token ) => {
 };
 
 // for update the userprofile 
-export const updateUserProfile = async (userData) => {
-  console.log(userData, "userData to update");
+export const updateUserProfile = async (userData, userId,token) => {
+  // console.log(userData, "userData to update");
   const formData = new FormData();
   formData.append('firstname', userData.firstname);
   formData.append('lastname', userData.lastname);
@@ -55,11 +55,10 @@ export const updateUserProfile = async (userData) => {
   formData.append('company',userData.company);
   formData.append('address',userData.address);
   formData.append('profile_image',userData.profile_image);
+  formData.append('id', userId);
   try {
-      const response = await postRequest('/update-profile', formData, {
-       headers: { 'Content-Type': 'multipart/form-data' },
-     });
-    return response.data;
+      const response = await postRequest('/update-profile',formData, token )
+    return response ;
   } catch (error) {
     throw error;
   }
