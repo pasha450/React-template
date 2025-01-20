@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
+
 // material-ui
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -18,7 +19,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import { useUser } from "src/contexts/auth-reducer/userContext"; 
 import { fetchUserProfile } from 'src/api/auth';
-
+import { updateUserProfile } from 'api/auth';
 
 // third party
 import * as Yup from 'yup';
@@ -52,16 +53,18 @@ export default function EditProfile({touched ,errors}){
         };
 
        // Fetch user profile data
-      useEffect(() => {
+       useEffect(() => {
         const getUserData = async () => {
           try {
-            if (user?._id && user?.token) {  // both userId and token exist
-              const userData = await fetchUserProfile(user._id , user.token);
-              console.log(userData,"fetched here user data  ")
-              setInitialValues({
+            if (user?._id && user?.token) {     // Ensure both userId and token exist
+              const userData = await fetchUserProfile(user._id, user.token);
+              setFormData({
                 firstname: userData.firstname || '',
                 lastname: userData.lastname || '',
                 email: userData.email || '',
+                company: userData.company || '',
+                address: userData.address || '',
+                profile_image: userData.profile_image || '',
               });
             }
           } catch (error) {
@@ -70,16 +73,33 @@ export default function EditProfile({touched ,errors}){
         };
         getUserData();
       }, [user]);
-      
 
   const handleSubmit = async (values, { setSubmitting }) => {
     console.log('Form submitted with values:', values);
-    setSubmitting(false);
+    setSubmitting(true);
+    try {
+      const updatedData = { ...values, profile_image: formData.profile_image }; 
+      const response = await updateUserProfile(updatedData);
+      console.log('Profile updated successfully:', response);
+
+      // Update the form data with the response
+      setFormData({
+        firstname: response.firstname,
+        lastname: response.lastname,
+        email: response.email,
+        company: response.company,
+        address: response.address,
+        profile_image: response.profile_image,
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    } 
   };
   return (
     <>
       <Formik
-        initialValues={formData} // Set initial values from state
+        key={JSON.stringify(formData)} // Add a key to force reinitialization
+        initialValues={formData}  
         validationSchema={Yup.object().shape({
           firstname: Yup.string().max(255).required('First Name is required'),
           lastname: Yup.string().max(255).required('Last Name is required'),

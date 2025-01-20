@@ -18,8 +18,6 @@ export const postRequest = async (endpoint, data, token = null) => {
       headers['Authorization'] = `Bearer ${token}`;
       headers['Content-Type'] = 'multipart/form-data';
     }
-
-    console.log(headers,'headers')
     const response = await apiClient.post(endpoint, data , {headers});
     return response.data;
   } catch (error) {

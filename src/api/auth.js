@@ -1,6 +1,6 @@
 
+import { UserDeleteOutlined } from '@ant-design/icons';
 import { postRequest } from './fetcher';
-import { useUser } from "src/contexts/auth-reducer/userContext"; 
 
 export const registerUser = async (userData) => {
   console.log(userData,"userData")
@@ -33,10 +33,9 @@ export const loginUser = async (credentials) => {
 
 export const fetchUserProfile = async (userId , token ) => {
   try {
-    // const { user } = useUser();
     const response = await postRequest('/edit-profile', { id: userId} , token);
-    if (response && response.data) {   
-      return response.data;
+    if (response && response.userData) {   
+      return response.userData;
     } else {
       throw new Error('Invalid response structure');
     }
@@ -46,17 +45,6 @@ export const fetchUserProfile = async (userId , token ) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-
-
 // for update the userprofile 
 export const updateUserProfile = async (userData) => {
   console.log(userData, "userData to update");
@@ -64,9 +52,14 @@ export const updateUserProfile = async (userData) => {
   formData.append('firstname', userData.firstname);
   formData.append('lastname', userData.lastname);
   formData.append('email', userData.email);
+  formData.append('company',userData.company);
+  formData.append('address',userData.address);
+  formData.append('profile_image',userData.profile_image);
   try {
-    const response = await postRequest('/update-profile', formData);
-    return response;
+      const response = await postRequest('/update-profile', formData, {
+       headers: { 'Content-Type': 'multipart/form-data' },
+     });
+    return response.data;
   } catch (error) {
     throw error;
   }

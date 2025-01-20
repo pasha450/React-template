@@ -33,6 +33,7 @@ import avatar1 from 'assets/images/users/avatar-1.png';
 import { useUser } from "src/contexts/auth-reducer/userContext"; 
 import useLogout from './logout';
 
+
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -75,7 +76,6 @@ export default function Profile() {
   };
 
   const iconBackColorOpen = 'grey.100';
- console.log(user,"user")
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
       <ButtonBase
