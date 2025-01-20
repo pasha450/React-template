@@ -22,7 +22,7 @@ const useLogout = () => {
 
     if (result.isConfirmed) {
       if (logout) logout(); // Call logout from context if defined
-      Cookies.remove('authToken');
+      // Cookies.remove('authToken');
       localStorage.removeItem('savedEmail');
       localStorage.removeItem('savedPassword');
        
