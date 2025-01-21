@@ -1,126 +1,106 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-
-// material-ui
+// Material-UI
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import axios from 'axios';
-import { useUser } from "src/contexts/auth-reducer/userContext"; 
-import { fetchUserProfile } from 'src/api/auth';
-import { updateUserProfile } from 'api/auth';
 
-// third party
+// Third-party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import axios from 'axios';
 
-// project import
+// Project Imports
+import { useUser } from 'src/contexts/auth-reducer/userContext';
+import { fetchUserProfile, updateUserProfile } from 'api/auth';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { validationErrors } from 'api/errorHandler';
 import successHandler from 'api/successHandler';
 
+export default function EditProfile() {
+  const { user } = useUser();
+  const [fileName, setFileName] = useState('No file chosen');
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    company: '',
+    address: '',
+    profile_image: '',
+  });
 
-export default function EditProfile({touched ,errors}){
-      const { user } = useUser();
-      const [fileName, setFileName] = useState("No file chosen");
-   
-      const [formData, setFormData] = useState({
-        firstname: '',
-        lastname: '',
-        email: '',
-        company: '',
-        address: '',
-        profile_image: '',
-      });
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      setFormData({ ...formData, profile_image: file });
+    } else {
+      setFileName('No file chosen');
+    }
+  };
 
-      const handleFileChange = (event) => {
-          const file = event.target.files[0];
-          if (file) {
-            setFileName(file.name);
-          } else {
-            setFileName("No file chosen");
-          }
-        };
-
-       // Fetch user profile data
-       useEffect(() => {
-        const getUserData = async () => {
-          try {
-            if (user?._id && user?.token) {   
-              const userData = await fetchUserProfile(user._id, user.token);
-              setFormData({
-                firstname: userData.firstname || '',
-                lastname: userData.lastname || '',
-                email: userData.email || '',
-                company: userData.company || '',
-                address: userData.address || '',
-                profile_image: userData.profile_image || '',
-              });
-            }
-          } catch (error) {
-            console.error('Error fetching user profile:', error);
-          }
-        };
-        getUserData();
-      }, [user]);
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        if (user?._id && user?.token) {
+          const userData = await fetchUserProfile(user._id, user.token);
+          setFormData({
+            firstname: userData.firstname || '',
+            lastname: userData.lastname || '',
+            email: userData.email || '',
+            company: userData.company || '',
+            address: userData.address || '',
+            profile_image: userData.profile_image || '',
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getUserData();
+  }, [user]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    console.log('Form submitted with values:', values);
-    setSubmitting(true);
     try {
-      if (user?._id && user?.token) { 
-      const updatedData = { ...values, profile_image: formData.profile_image}; 
-      const response = await updateUserProfile(updatedData, user._id, user.token);
-      console.log('Profile updated successfully:', response);
-      successHandler(response)
-      setFormData({
-        firstname: response.firstname,
-        lastname: response.lastname,
-        email: response.email,
-        company: response.company,
-        address: response.address,
-        profile_image: response.profile_image,
-      });
-      
+      if (user?._id && user?.token) {
+        const response = await updateUserProfile(values, user._id, user.token);
+        successHandler(response);
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      validationErrors(error)
-    } 
-  };
+      validationErrors(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };  
+
+  if (loading) {
+    return <CircularProgress />;
+  }
   return (
     <>
       <Formik
-        // key={JSON.stringify(formData)} // Add a key to force reinitialization
         enableReinitialize
-        initialValues={formData} 
-        
-        // initialValues={{
-        //   firstname: formData.firstname , 
-        //   lastname: formData.lastname ,
-        //   email: formData.email ,
-        //   company: formData.company ,
-        //   address: formData.address ,
-        //   profile_image: formData.profile_image ,
-        // }}
-        
+        initialValues={formData}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().max(255).required('First Name is required'),
           lastname: Yup.string().max(255).required('Last Name is required'),
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          address:Yup.string().max(255).required('Address filed is required'),
+          address: Yup.string().max(255).required('Address is required'),
         })}
         onSubmit={handleSubmit}
       >
@@ -131,192 +111,100 @@ export default function EditProfile({touched ,errors}){
                 <Stack spacing={1}>
                   <InputLabel htmlFor="firstname-signup">First Name*</InputLabel>
                   <OutlinedInput
-                    id="firstname-login"
-                    type="firstname"
+                    id="firstname-signup"
                     value={values.firstname}
                     name="firstname"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter your first Name" 
+                    placeholder="Enter your first name"
                     fullWidth
                     error={Boolean(touched.firstname && errors.firstname)}
                   />
                 </Stack>
                 {touched.firstname && errors.firstname && (
-                  <FormHelperText error id="helper-text-firstname-signup">
-                    {errors.firstname}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.firstname}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
                   <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.lastname && errors.lastname)}
                     id="lastname-signup"
-                    type="lastname"
                     value={values.lastname}
                     name="lastname"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter your Last Name "
-                    inputProps={{}}
+                    placeholder="Enter your last name"
+                    fullWidth
+                    error={Boolean(touched.lastname && errors.lastname)}
                   />
                 </Stack>
                 {touched.lastname && errors.lastname && (
-                  <FormHelperText error id="helper-text-lastname-signup">
-                    {errors.lastname}
-                  </FormHelperText>
-                )}
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="company-signup">Company</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.company && errors.company)}
-                    id="company-signup"
-                    value={values.company}
-                    name="company"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="Demo Inc."
-                    inputProps={{}}
-                  />
-                </Stack>
-                {touched.company && errors.company && (
-                  <FormHelperText error id="helper-text-company-signup">
-                    {errors.company}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.lastname}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="email-signup">Email Address*</InputLabel>
                   <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.email && errors.email)}
-                    id="email-login"
-                    type="email"
+                    id="email-signup"
                     value={values.email}
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="demo@company.com"
-                    inputProps={{}} 
-
+                    placeholder="Enter your email"
+                    fullWidth
+                    error={Boolean(touched.email && errors.email)}
                   />
                 </Stack>
                 {touched.email && errors.email && (
-                  <FormHelperText error id="helper-text-email-signup">
-                    {errors.email}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.email}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                    <InputLabel htmlFor="profile-image">Profile Image</InputLabel>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            border: "1px solid",
-                            borderColor: touched?.profileImage && errors?.profileImage ? "error.main" : "grey.300",
-                            borderRadius: "4px",
-                            padding: "3px ",
-                            backgroundColor: "white",
-                            
-                        }}
-                        >
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                        <Button
-                            component="label"
-                            variant="contained"
-                            startIcon={<CloudUploadIcon />}
-                        >
-                            Upload File
-                            <input
-                                type="file"
-                                hidden
-                                onChange={handleFileChange}
-                                id="profile-image"
-                                multiple
-                            />
-                        </Button>
-                        <Typography variant="body2">{fileName}</Typography>
-                        </Stack>
-                    </Box>
-                    {touched.profileImage && errors.profileImage && (
-                    <FormHelperText error id="helper-text-profile-image">
-                        {errors.profileImage}
-                    </FormHelperText>
-                    )}
+                  <InputLabel htmlFor="profile-image">Profile Image</InputLabel>
+                  <Box>
+                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                      Upload File
+                      <input type="file" hidden onChange={handleFileChange} />
+                    </Button>
+                    <Typography>{fileName}</Typography>
+                  </Box>
                 </Stack>
-             </Grid>
-
-                <Grid item xs={12} md={6}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="contact-signup">Contact Number</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.contact && errors.contact)}
-                    id="Contact-Number"
-                    type="number"
-                    value={values.contact}
-                    name="contact"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="+91 "
-                    inputProps={{}} 
-                  />
-                </Stack>
-                {touched.contact && errors.contact && (
-                  <FormHelperText error id="helper-text-email-signup">
-                    {errors.contact}
-                  </FormHelperText>
-                )}
               </Grid>
-
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                    <InputLabel htmlFor="address-signup">Address*</InputLabel>
-                    <textarea
+                  <InputLabel htmlFor="address-signup">Address*</InputLabel>
+                  <OutlinedInput
                     id="address-signup"
-                    name="address"
                     value={values.address}
+                    name="address"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Enter your address"
+                    fullWidth
+                    multiline
                     rows={4}
-                    style={{
-                        width: '100%',
-                        padding: '10px',
-                        borderColor: touched.address && errors.address ? 'red' : '#ccc',
-                        borderRadius: '4px',
-                        fontSize: '1rem',
-                        fontFamily: 'inherit',
-                        
-                    }}
-                    />
+                    error={Boolean(touched.address && errors.address)}
+                  />
                 </Stack>
                 {touched.address && errors.address && (
-                    <FormHelperText error id="helper-text-address-signup">
-                    {errors.address}
-                    </FormHelperText>
+                  <FormHelperText error>{errors.address}</FormHelperText>
                 )}
-                </Grid>
-
-
+              </Grid>
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation 
-                  disabled={isSubmitting} 
-                  fullWidth size="large" 
-                  type="submit" 
-                  variant="contained"
-                  color="primary">
-                  Edit Profile
+                  <Button
+                    disableElevation
+                    disabled={isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
+                    {isSubmitting ? <CircularProgress size={24} /> : 'Edit Profile'}
                   </Button>
                 </AnimateButton>
               </Grid>

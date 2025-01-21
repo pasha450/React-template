@@ -47,7 +47,6 @@ export const fetchUserProfile = async (userId , token ) => {
 
 // for update the userprofile 
 export const updateUserProfile = async (userData, userId,token) => {
-  // console.log(userData, "userData to update");
   const formData = new FormData();
   formData.append('firstname', userData.firstname);
   formData.append('lastname', userData.lastname);
