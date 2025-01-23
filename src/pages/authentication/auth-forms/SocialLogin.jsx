@@ -2,6 +2,8 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import React, { useState } from 'react';
+
 
 // assets
 import Google from 'assets/images/icons/google.svg';
@@ -18,7 +20,7 @@ export default function SocialLogin() {
   const navigate = useNavigate();
   const downSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
- 
+
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
@@ -30,7 +32,6 @@ export default function SocialLogin() {
     }
   };
   const handleGithubLogin = () => {
-    // Redirect to the backend route to initiate GitHub OAuth
     window.location.href = 'http://localhost:5000/auth/github';
   };
 
