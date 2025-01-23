@@ -19,7 +19,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 
-
 // third party
 import * as Yup from 'yup';
 import { loginUser } from '/src/api/auth';
@@ -30,14 +29,13 @@ import AnimateButton from 'components/@extended/AnimateButton';
 // assets
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
-import FirebaseSocial from './FirebaseSocial';
+import SocialLogin from './SocialLogin';
 import { values } from 'lodash';
 import { useNavigate } from "react-router-dom";
 import successHandler from 'api/successHandler';
 import { useUser } from "../../../contexts/auth-reducer/userContext"; 
 import { Formik ,ErrorMessage} from 'formik';    // add the  errorMessage 
 import { validationErrors } from 'api/errorHandler';
-
 
 // ============================|| JWT - LOGIN ||============================ //
 
@@ -185,7 +183,7 @@ export default function AuthLogin({ isDemo = false }) {
                 </Divider>
               </Grid>
               <Grid item xs={12}>
-                <FirebaseSocial />
+                <SocialLogin />
               </Grid>
             </Grid>
           </form>
