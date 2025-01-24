@@ -19,7 +19,7 @@ export default function SocialLogin() {
   const navigate = useNavigate();
   const downSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
+  
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
@@ -33,9 +33,8 @@ export default function SocialLogin() {
   const handleGithubLogin = () => {
     window.location.href = 'http://localhost:5000/auth/github';
   };
-
+     
   const facebookHandler = async () => {
-    // login || singup
   };
 
   return (
@@ -50,37 +49,70 @@ export default function SocialLogin() {
       }}
     >
       <GoogleLogin
-        onSuccess={handleGoogleSuccess}
-        onError={() => {
-          console.error('Google Login Failed');
-        }}
-      >
-        <Button
-          variant="outlined"
-          color="secondary"
-          fullWidth={!downSM}
-          startIcon={<img src={Google} alt="Google" />}
-        >
-          {!downSM && 'Google'}
-        </Button>
-      </GoogleLogin>
-      <Button
-          variant="outlined"
-          color="secondary"
-          fullWidth={!downSM}
-          onClick={handleGithubLogin}
-          startIcon={<img src ={Github} alt="Github"/>}
-        >
-      {!downSM && 'Github'}
-      </Button>
-      <Button
-        variant="outlined"
-        color="secondary"
-        fullWidth={!downSM}
-        startIcon={<img src={Facebook} alt="Facebook" />}
-      >
-        {!downSM && 'Facebook'}
-      </Button>
+  onSuccess={handleGoogleSuccess}
+  onError={() => {
+    console.error("Google Login Failed");
+  }}
+  render={(renderProps) => (
+    <Button
+      onClick={renderProps.onClick}
+      disabled={renderProps.disabled}
+      variant="outlined"
+      color="secondary"
+      fullWidth={!downSM}
+      startIcon={<img src={Google} alt="Google" style={{ width: 20, height: 20 }} />}
+      sx={{
+        textTransform: "none",
+        fontSize: "10px", 
+        display: "flex",
+        justifyContent: "flex-start", 
+        border: "1px solid #ddd", 
+        borderRadius: "8px", 
+        height: "50px", 
+      }}
+    >
+      {!downSM}
+    </Button>
+  )}
+/>
+<Button
+  variant="outlined"
+  color="secondary"
+  fullWidth={!downSM}
+  onClick={handleGithubLogin}
+  startIcon={<img src={Github} alt="Github" style={{ width: 20, height: 20 }} />}
+  sx={{
+    textTransform: "none",
+    fontSize: "14px",
+    display: "flex",
+    justifyContent: "flex-start",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+    height: "40px",
+  }}
+>
+  {!downSM &&"Github"}
+</Button>
+<Button
+  variant="outlined"
+  color="secondary"
+  fullWidth={!downSM}
+  startIcon={<img src={Facebook} alt="Facebook" style={{ width: 20, height: 20 }} />}
+
+  sx={{
+    textTransform: "none",
+    fontSize: "14px",
+    display: "flex",
+    justifyContent: "flex-start",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+    height: "40px",
+  }}
+>
+  {/* {!downSM} */}
+  {!downSM && "Facebook"}
+
+</Button>
     </Stack>
   </GoogleOAuthProvider>
   );

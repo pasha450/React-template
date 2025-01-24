@@ -143,7 +143,6 @@ export default function AuthLogin({ isDemo = false }) {
                   </FormHelperText>
                 )}
               </Grid>
-
               <Grid item xs={12} sx={{ mt: -1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                   <FormControlLabel
@@ -154,13 +153,11 @@ export default function AuthLogin({ isDemo = false }) {
                         name="checked"
                         color="primary"
                         size="small"
-
                       /> 
                     }
                     label={<Typography variant="h6">Keep me sign in</Typography>}
                   />
                   <Link variant="h6" component={RouterLink} color="text.primary">
-                    
                     Forgot Password?
                   </Link>
                 </Stack>
