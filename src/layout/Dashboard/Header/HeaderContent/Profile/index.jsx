@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useRef, useState ,useEffect} from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -17,7 +17,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-
 // project import
 import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
@@ -32,7 +31,7 @@ import UserOutlined from '@ant-design/icons/UserOutlined';
 import avatar1 from 'assets/images/users/avatar-1.png';
 import { useUser } from "src/contexts/auth-reducer/userContext"; 
 import useLogout from './logout';
-
+import { useLocation } from 'react-router-dom';
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -68,13 +67,25 @@ export default function Profile() {
     }
     setOpen(false);
   };
-
   const [value, setValue] = useState(0);
+  const { setUser } = useUser();
+  const location = useLocation();
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+    
+ 
+  // add here  for the github user -----*******
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const userData = query.get("user");
 
+    if (userData) {
+      setUser(JSON.parse(decodeURIComponent(userData)));
+    }
+  }, [location, setUser]);
   const iconBackColorOpen = 'grey.100';
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
@@ -128,6 +139,7 @@ export default function Profile() {
                       <Grid item>
                         <Stack direction="row" spacing={1.25} alignItems="center">
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
+                        
                           <Stack>
                             <Typography variant="h6">
                               {/* John Doe */}

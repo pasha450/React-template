@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import React, { useState } from 'react';
 
+
 // assets
 import Google from 'assets/images/icons/google.svg';
 import Twitter from 'assets/images/icons/twitter.svg';
@@ -20,7 +21,7 @@ export default function SocialLogin() {
   const downSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   
-
+  
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const data = await googleLoginHandler(credentialResponse); 
@@ -33,10 +34,11 @@ export default function SocialLogin() {
   const handleGithubLogin = () => {
     window.location.href = 'http://localhost:5000/auth/github';
   };
-     
-  const facebookHandler = async () => {
-  };
 
+  const handleFacebookLogin = () => {
+    window.location.href = "http://localhost:5000/auth/facebook";
+  };
+  
   return (
     <GoogleOAuthProvider clientId={clientId}>
     <Stack
@@ -45,15 +47,14 @@ export default function SocialLogin() {
       justifyContent={{ xs: 'space-around', sm: 'space-between' }}
       sx={{
         '& .MuiButton-startIcon': { mr: { xs: 0, sm: 1 }, ml: { xs: 0, sm: -0.5 } },
-        
       }}
     >
       <GoogleLogin
-  onSuccess={handleGoogleSuccess}
-  onError={() => {
-    console.error("Google Login Failed");
-  }}
-  render={(renderProps) => (
+      onSuccess={handleGoogleSuccess}
+      onError={() => {
+        console.error("Google Login Failed");
+      }}
+       render={(renderProps) => (
     <Button
       onClick={renderProps.onClick}
       disabled={renderProps.disabled}
@@ -97,8 +98,9 @@ export default function SocialLogin() {
   variant="outlined"
   color="secondary"
   fullWidth={!downSM}
+  onClick={handleFacebookLogin}
   startIcon={<img src={Facebook} alt="Facebook" style={{ width: 20, height: 20 }} />}
-
+  
   sx={{
     textTransform: "none",
     fontSize: "14px",
