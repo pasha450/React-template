@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 
 
 // ==============================|| GoogleOAuthProvider - SOCIAL BUTTON ||============================== //
-
 export default function SocialLogin() {
   const navigate = useNavigate();
   const downSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
@@ -39,6 +38,10 @@ export default function SocialLogin() {
     window.location.href = "http://localhost:5000/auth/facebook";
   };
   
+  const handleTwitterLogin = (e) => {
+    e.preventDefault();  
+    window.location.href = "http://localhost:5000/auth/twitter";
+  }; 
   return (
     <GoogleOAuthProvider clientId={clientId}>
     <Stack
@@ -74,47 +77,64 @@ export default function SocialLogin() {
     >
       {!downSM}
     </Button>
-  )}
-/>
-<Button
-  variant="outlined"
-  color="secondary"
-  fullWidth={!downSM}
-  onClick={handleGithubLogin}
-  startIcon={<img src={Github} alt="Github" style={{ width: 20, height: 20 }} />}
-  sx={{
-    textTransform: "none",
-    fontSize: "14px",
-    display: "flex",
-    justifyContent: "flex-start",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-    height: "40px",
-  }}
->
-  {!downSM &&"Github"}
-</Button>
-<Button
-  variant="outlined"
-  color="secondary"
-  fullWidth={!downSM}
-  onClick={handleFacebookLogin}
-  startIcon={<img src={Facebook} alt="Facebook" style={{ width: 20, height: 20 }} />}
-  
-  sx={{
-    textTransform: "none",
-    fontSize: "14px",
-    display: "flex",
-    justifyContent: "flex-start",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-    height: "40px",
-  }}
->
-  {/* {!downSM} */}
-  {!downSM && "Facebook"}
+     )}
+      />
+    <Button
+      variant="outlined"
+      color="secondary"
+      fullWidth={!downSM}
+      onClick={handleGithubLogin}
+      startIcon={<img src={Github} alt="Github" style={{ width: 20, height: 20 }} />}
+      sx={{
+        textTransform: "none",
+        fontSize: "14px",
+        display: "flex",
+        justifyContent: "flex-start",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+        height: "40px",
+      }}
+    >
+      {!downSM }
+    </Button>
+    <Button
+      variant="outlined"
+      color="secondary"
+      fullWidth={!downSM}
+      onClick={handleFacebookLogin}
+      startIcon={<img src={Facebook} alt="Facebook" style={{ width: 20, height: 20 }} />}
+      sx={{
+        textTransform: "none",
+        fontSize: "14px",
+        display: "flex",
+        justifyContent: "flex-start",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+        height: "40px",
+      }}
+    >
+      {!downSM }
+    </Button>
 
-</Button>
+{/* // for Twitter */}
+    <Button 
+      variant="outlined"
+      color="secondary"
+      fullWidth={!downSM}
+      onClick={ handleTwitterLogin}
+      startIcon={<img src={Twitter} alt="twitter" style={{ width: 20, height: 20 }} />}
+      sx={{
+        textTransform: "none",
+        fontSize: "14px",
+        display: "flex",
+        justifyContent: "flex-start",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+        height: "40px",
+      }}
+    >
+      {!downSM }
+    </Button>
     </Stack>
   </GoogleOAuthProvider>
   );
