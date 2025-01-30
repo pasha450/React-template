@@ -6,7 +6,7 @@ import Dashboard from 'layout/Dashboard';
 import EditProfile from 'pages/authentication/auth-forms/EditProfile';
 import { element } from 'prop-types';
 
-const Color = Loadable(lazy(() => import('pages/component-overview/color')));
+const FamilyMembers = Loadable(lazy(() => import('pages/component-overview/FamilyMembers')));
 const Family = Loadable (lazy(() => import('pages/component-overview/family')))
 const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
@@ -21,8 +21,8 @@ const MainRoutes = {
   element: <Dashboard />,
   children: [
     {
-      path: 'color',
-      element: <Color />
+      path: 'familyMembers',
+      element: <FamilyMembers />
       
     },
     {

@@ -6,7 +6,8 @@ import {
   BgColorsOutlined,
   // FontSizeOutlined,
   TeamOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons';
 // icons
 const icons = {
@@ -36,10 +37,10 @@ const utilities = {
     },
     {
       id: 'util-color',
-      title: 'Color',
+      title: 'FamilyMembers',
       type: 'item',
-      url: '/color',
-      icon: icons.BgColorsOutlined
+      url: '/FamilyMembers',
+      icon:AppstoreOutlined,
     },
     {
       id: 'util-shadow',

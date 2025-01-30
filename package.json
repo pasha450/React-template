@@ -9,8 +9,8 @@
     "url": "https://codedthemes.com/"
   },
   "scripts": {
-    "start": "vite",
-    "build": "vite build",
+    "start": "node api.js && vite",
+    "build": "node api.js && vite build",
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
