@@ -12,12 +12,14 @@ import FormHelperText from '@mui/material/FormHelperText';
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import axios from 'axios';
 
 // project import
 import { Formik, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import AnimateButton from 'components/@extended/AnimateButton';
-
+import { registerFamilyMember } from 'api/familyMember';
+import successHandler from 'api/successHandler';
 // ==============================|| COMPONENTS - TYPOGRAPHY ||============================== //
 
 export default function ComponentFamily() {
@@ -29,6 +31,8 @@ export default function ComponentFamily() {
         email: '',
         occupation: '',
         address: '',
+        age:'',
+        contact:'',
       },
     ],
   };
@@ -41,14 +45,31 @@ export default function ComponentFamily() {
         email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
         occupation: Yup.string().max(255).required('Occupation is required'),
         address: Yup.string().max(255).required('Address is required'),
+        age: Yup.number()
+        .typeError('Age must be a number') 
+        .positive('Age must be a positive number') 
+        .integer('Age must be an integer') 
+        .max(255, 'Age must be less than or equal to 255') 
+        .required('Age is required'), 
+        contact: Yup.string()
+        .matches(/^\d+$/, 'Contact number must be a number')
+        .min(10, 'Contact number must be at least 10 digits')
+        .max(15, 'Contact number must be less than or equal to 15 digits') 
+        .required('Contact number is required'), 
       })
     ),
   });
 
-  const handleSubmit = (values) => {
-    console.log('Submitted Family Members:', values.familyMembers);
-    // Handle form submission (e.g., send data to an API)
+
+  const handleSubmit = async (values, { setErrors }) => {
+    try {
+      const response = await registerFamilyMember(values, { setErrors });
+      successHandler(response);
+    } catch (error) {
+      console.log(error, 'show error message');
+    }
   };
+  
 
   return (
     <>
@@ -168,6 +189,55 @@ export default function ComponentFamily() {
                               </FormHelperText>  
                             )}
                         </Grid>
+                      
+                        <Grid item xs={12} md={6}>
+                          <Stack spacing={1}>
+                            <InputLabel htmlFor={`age-${index}`}>Age*</InputLabel>
+                            <OutlinedInput
+                              id={`age-${index}`}
+                              value={member.age}
+                              name={`familyMembers[${index}].age`}
+                              onChange={handleChange}
+                              placeholder="Enter age"
+                              fullWidth
+                              error={Boolean(
+                                touched.familyMembers?.[index]?.age &&
+                                  errors.familyMembers?.[index]?.age 
+                              )}
+                            />
+                          </Stack>
+                          {touched.familyMembers?.[index]?.age &&
+                            errors.familyMembers?.[index]?.age && (
+                              <FormHelperText error>
+                                {errors.familyMembers[index].age}
+                              </FormHelperText>
+                            )}
+                        </Grid>
+                        {/* //Add contact no */}
+                         <Grid item xs={12} md={6}>
+                          <Stack spacing={1}>
+                            <InputLabel htmlFor={`contact-${index}`}>Contact No*</InputLabel>
+                            <OutlinedInput
+                              id={`contact-${index}`}
+                              value={member.contact}
+                              name={`familyMembers[${index}].contact`}
+                              onChange={handleChange}
+                              placeholder="Enter Your Contact "
+                              fullWidth
+                              error={Boolean(
+                                touched.familyMembers?.[index]?.contact &&
+                                  errors.familyMembers?.[index]?.contact 
+                              )}
+                            />
+                          </Stack>
+                          {touched.familyMembers?.[index]?.contact &&
+                            errors.familyMembers?.[index]?.contact && (
+                              <FormHelperText error>
+                                {errors.familyMembers[index].contact}
+                              </FormHelperText>
+                            )}
+                        </Grid>
+
                         <Grid item xs={12}>
                           <Stack spacing={1}>
                             <InputLabel htmlFor={`address-${index}`}>Address*</InputLabel>
@@ -211,6 +281,8 @@ export default function ComponentFamily() {
                           email: '',
                           occupation: '',
                           address: '',
+                          age:'',
+                          contact:'',
                         })
                       }
                     >
